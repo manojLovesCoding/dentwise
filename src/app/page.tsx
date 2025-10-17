@@ -1,10 +1,24 @@
-import { Button } from '@/components/ui/button'
-import React from 'react'
+import { Button } from "@/components/ui/button";
 
-const page = () => {
+import {
+  SignedIn,
+  SignedOut,
+  SignOutButton,
+  SignUpButton,
+} from "@clerk/nextjs";
+import Image from "next/image";
+
+export default function Home() {
   return (
-    <Button>Click me</Button>
-  )
-}
+    <div>
+      <h1>Home page</h1>
+      <SignedOut>
+        <SignUpButton mode="modal">Sign Up</SignUpButton>
+      </SignedOut>
 
-export default page
+      <SignedIn>
+        <SignOutButton>Logout</SignOutButton>
+      </SignedIn>
+    </div>
+  );
+}
