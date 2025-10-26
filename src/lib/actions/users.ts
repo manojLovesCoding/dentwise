@@ -8,17 +8,21 @@ export async function syncUser() {
     const user = await currentUser();
     if (!user) return;
 
-    const existingUser = await prisma.user.findUnique({
-      where: { clerkId: user.id },
-    });
-    if (existingUser) return existingUser;
+    const email = user.emailAddresses[0]?.emailAddress;
 
-    const dbUser = await prisma.user.create({
-      data: {
+    const dbUser = await prisma.user.upsert({
+      where: { email }, // match existing user by email
+      update: {
         clerkId: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
-        email: user.emailAddresses[0].emailAddress,
+        phone: user.phoneNumbers[0]?.phoneNumber,
+      },
+      create: {
+        clerkId: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email,
         phone: user.phoneNumbers[0]?.phoneNumber,
       },
     });
